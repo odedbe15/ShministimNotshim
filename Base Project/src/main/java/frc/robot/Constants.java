@@ -29,4 +29,17 @@ public class Constants {
       public static final int TELEOP_TIME = 135;
       public static final int ENDGAME_TIME = 30;
    }
+
+   public static class ShootingConstants {
+      public static final int LEFT_MOTOR_ID = 5;
+      public static final int RIGHT_MOTOR_ID = 6;
+
+      public static final double KP = 0;
+      public static final double KI = 0;
+      public static final double KD = 0;
+      
+   }
+
 }
+
+
