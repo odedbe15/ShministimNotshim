@@ -37,6 +37,10 @@ public class Constants {
       public static final double KP = 0;
       public static final double KI = 0;
       public static final double KD = 0;
+
+      public static final double SPEAKER_VELOCITY = 0;
+      public static final double AMP_VELOCITY = 0;
+      public static final double OUTAKE_VELOCITY = 0;
       
    }
 

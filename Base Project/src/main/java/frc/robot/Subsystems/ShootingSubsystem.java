@@ -35,9 +35,16 @@ public class ShootingSubsystem extends PomMotorSubsystem{
         leftMotor.setIdleMode(brake ? IdleMode.kBrake : IdleMode.kCoast);
         rightMotor.setIdleMode(brake ? IdleMode.kBrake : IdleMode.kCoast);
     }
+
+
     
     public double getVelocity(){
         return (leftMotor.getEncoder().getVelocity() + rightMotor.getEncoder().getVelocity())/2;
+    }
+
+
+    public void shoot(double velocity){
+        setMotor(controller.calculate(velocity));
     }
 
     @Override
