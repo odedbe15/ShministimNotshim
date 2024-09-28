@@ -22,6 +22,7 @@ public class ShootToSpeakerCommand extends Command {
 
     @Override
     public void execute() {
+         shootingSubsystem.shoot(SPEAKER_VELOCITY);
     }
 
     @Override

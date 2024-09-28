@@ -21,6 +21,8 @@ public class ShootToAmpCommand extends Command {
 
     @Override
     public void execute() {
+        shootingSubsystem.shoot(AMP_VELOCITY);
+
     }
 
     @Override
