@@ -24,14 +24,13 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public class Constants {
-   public static final class GameConstants{
+   public static final class GameConstants {
       public static final int AUTO_TIME = 15;
       public static final int TELEOP_TIME = 135;
       public static final int ENDGAME_TIME = 30;
    }
 
-
-   public class DriveConstants{
+   public class DriveConstants {
 
       public static final int RIGHT_MASTER_ID = 1;
       public static final int RIGHT_SLAVE_ID = 2;
@@ -39,11 +38,12 @@ public class Constants {
       public static final int LEFT_SLAVE_ID = 4;
       public static final int PIGEON_ID = 8;
 
-
       public static final double FWD_SPEED_FACTOR = 0.2;
       public static final double ROT_SPEED_FACTOR = 0.2;
-      
 
+   }
 
+   public class GeneralConstants {
+      public static final double DEFAULT_INPUT_DEADBAND = 0.02;
    }
 }

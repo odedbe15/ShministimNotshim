@@ -7,14 +7,11 @@ import java.util.function.Supplier;
 
 public class DriveJoysticksCommand extends Command {
 
-
     DriveSubsystem driveSubsystem;
     double speed;
     double rotation;
 
-
-    
-    public DriveJoysticksCommand(Supplier<Double> speed, Supplier<Double> rotation){
+    public DriveJoysticksCommand(Supplier<Double> speed, Supplier<Double> rotation) {
         this.speed = speed.get();
         this.rotation = rotation.get();
 
@@ -28,7 +25,7 @@ public class DriveJoysticksCommand extends Command {
 
     @Override
     public void execute() {
-       driveSubsystem.arcadeDrive(speed, rotation);
+        driveSubsystem.arcadeDrive(speed, rotation);
     }
 
     @Override
@@ -42,5 +39,5 @@ public class DriveJoysticksCommand extends Command {
         // TODO Auto-generated method stub
         return super.isFinished();
     }
-    
+
 }

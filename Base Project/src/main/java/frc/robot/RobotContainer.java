@@ -44,12 +44,11 @@ public class RobotContainer {
   // A chooser for autonomous commands
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
-
   public PomXboxController driverController = new PomXboxController(0);
   public PomXboxController operatorController = new PomXboxController(1);
 
   DriveSubsystem driveSubsystem = new DriveSubsystem();
-  
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -57,8 +56,9 @@ public class RobotContainer {
     configureButtonBindings();
 
     SmartDashboard.putData("Auto Mode", m_chooser);
-    driveSubsystem.setDefaultCommand(new DriveJoysticksCommand( () -> driverController.getLeftY() * FWD_SPEED_FACTOR  , () -> (driverController.getLeftTriggerAxis() - driverController.getRightTriggerAxis()) * ROT_SPEED_FACTOR));
-    
+    driveSubsystem.setDefaultCommand(new DriveJoysticksCommand(() -> driverController.getLeftY() * FWD_SPEED_FACTOR,
+        () -> (driverController.getLeftTriggerAxis() - driverController.getRightTriggerAxis()) * ROT_SPEED_FACTOR));
+
   }
 
   public static RobotContainer getInstance() {

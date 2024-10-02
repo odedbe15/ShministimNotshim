@@ -1,14 +1,24 @@
 package frc.robot.Subsystems;
 
+import static frc.robot.Constants.DriveConstants.LEFT_MASTER_ID;
+import static frc.robot.Constants.DriveConstants.LEFT_SLAVE_ID;
+import static frc.robot.Constants.DriveConstants.PIGEON_ID;
+import static frc.robot.Constants.DriveConstants.RIGHT_MASTER_ID;
+import static frc.robot.Constants.DriveConstants.RIGHT_SLAVE_ID;
+
 import com.ctre.phoenix.sensors.WPI_PigeonIMU;
+import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
 import frc.robot.POM_lib.Motors.POMSparkMax;
+import static frc.robot.Constants.GeneralConstants.*;
 
-import static frc.robot.Constants.DriveConstants.*;
+import org.opencv.core.Mat;
 
 public class DriveSubsystem extends PomMotorSubsystem {
 
@@ -27,27 +37,22 @@ public class DriveSubsystem extends PomMotorSubsystem {
         leftSlave.follow(leftMaster);
         leftMaster.setInverted(true);
 
-        //TODO Set Encoder Conversion Factor
+        // TODO Set Encoder Conversion Factor
 
         ResetEncoders();
 
-        
-        
+        driveOdometry = new DifferentialDriveOdometry(yona.getRotation2d(), leftMaster.getEncoder().getPosition(),
+                rightMaster.getEncoder().getPosition());
 
-        driveOdometry = new DifferentialDriveOdometry(yona.getRotation2d() , leftMaster.getEncoder().getPosition() ,rightMaster.getEncoder().getPosition());
-
-        
     }
-
-
 
     @Override
     public void periodic() {
-        driveOdometry.update(yona.getRotation2d(),leftMaster.getEncoder().getPosition(), rightMaster.getEncoder().getPosition());
+        driveOdometry.update(yona.getRotation2d(), leftMaster.getEncoder().getPosition(),
+                rightMaster.getEncoder().getPosition());
     }
 
-
-    public Pose2d getPose(){
+    public Pose2d getPose() {
         return driveOdometry.getPoseMeters();
     }
 
@@ -74,24 +79,61 @@ public class DriveSubsystem extends PomMotorSubsystem {
 
     }
 
+    public WheelSpeeds WheelSpeedSeter(double xSpeed, double zRotation, boolean squareInputs) {
 
-    public void ResetEncoders(){
+        xSpeed = MathUtil.clamp(xSpeed, -1.0, 1.0);
+        zRotation = MathUtil.clamp(zRotation, -1.0, 1.0);
+
+        if (squareInputs) {
+            xSpeed = Math.copySign(xSpeed * xSpeed, xSpeed);
+            zRotation = Math.copySign(zRotation * zRotation, zRotation);
+        }
+
+        double leftSpeed = xSpeed - zRotation;
+        double rightSpeed = xSpeed + zRotation;
+
+        double greaterInput = Math.max(Math.abs(xSpeed), Math.abs(zRotation));
+        double lesserInput = Math.min(Math.abs(xSpeed), Math.abs(zRotation));
+
+        if (greaterInput == 0.0) {
+            return new WheelSpeeds(0.0, 0.0);
+
+        }
+        double saturatedInput = (greaterInput + lesserInput) / greaterInput;
+        leftSpeed /= saturatedInput;
+        rightSpeed /= saturatedInput;
+
+        return new WheelSpeeds(leftSpeed, rightSpeed);
+
+    }
+
+    public void drive(double xSpeed, double zRotation, boolean squareInputs) {
+        xSpeed = MathUtil.applyDeadband(xSpeed, DEFAULT_INPUT_DEADBAND);
+        zRotation = MathUtil.applyDeadband(zRotation, DEFAULT_INPUT_DEADBAND);
+
+        var speeds = WheelSpeedSeter(xSpeed, zRotation, squareInputs);
+
+        leftMaster.getPIDController().setReference(speeds.left, ControlType.kVelocity);
+        rightMaster.getPIDController().setReference(speeds.right, ControlType.kVelocity);
+
+    }
+
+    public void ResetEncoders() {
         rightMaster.getEncoder().setPosition(0);
         leftMaster.getEncoder().setPosition(0);
         rightSlave.getEncoder().setPosition(0);
         leftSlave.getEncoder().setPosition(0);
     }
 
-    public double getAvgEncoderDistance(){
-        return(rightMaster.getEncoder().getPosition() + leftMaster.getEncoder().getPosition() )/2;
+    public double getAvgEncoderDistance() {
+        return (rightMaster.getEncoder().getPosition() + leftMaster.getEncoder().getPosition()) / 2;
     }
 
-    public void resetGyro(){
+    public void resetGyro() {
         yona.reset();
     }
 
-
-    public void arcadeDrive(double fwd, double rot){
+    public void arcadeDrive(double fwd, double rot) {
         drive.arcadeDrive(fwd, rot);
     }
 
