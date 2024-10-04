@@ -24,23 +24,27 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public class Constants {
-   public static final class GameConstants{
+   public static final class GameConstants {
       public static final int AUTO_TIME = 15;
       public static final int TELEOP_TIME = 135;
       public static final int ENDGAME_TIME = 30;
    }
-   public static final class IntakeConstants{
+
+   public static final class IntakeConstants {
       public static final int LIFT_MOTOR_ID = 0;
       public static final int LIFT_ENCODER_ID = 0;
       public static final double KP = 0;
       public static final double KI = 0;
       public static final double KD = 0;
-      public static final double MAX_VEL= 0;
+      public static final double MAX_VEL = 0;
       public static final double MAX_ACC = 0;
       public static final double KS = 0;
       public static final double KG = 0;
       public static final double KV = 0;
       public static final double ENCODER_OFFSET = 0;
+      public static final double CLOSED_POSITION = 0;
+      public static final double OPENED_POSITION = 0;
+      public static final double TOLERANCE = Math.PI / 20.0;
 
    }
 }

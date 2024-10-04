@@ -21,6 +21,7 @@ public class IntakeLiftSubsystem extends PomMotorSubsystem {
         motor = new POMVictorSpx(LIFT_MOTOR_ID);
         ff = new ArmFeedforward(KS, KG, KV);
         pidController = new ProfiledPIDController(KP, KI, KD, new Constraints(MAX_VEL, MAX_ACC));
+        pidController.setTolerance(TOLERANCE);
         encoder = new AnalogPotentiometer(LIFT_ENCODER_ID, 2 * Math.PI, ENCODER_OFFSET);
     }
 
@@ -29,6 +30,10 @@ public class IntakeLiftSubsystem extends PomMotorSubsystem {
             instance = new IntakeLiftSubsystem();
         }
         return instance;
+    }
+
+    public boolean getAtGoal() {
+        return pidController.atGoal();
     }
 
     @Override
