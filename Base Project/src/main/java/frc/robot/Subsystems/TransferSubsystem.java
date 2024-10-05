@@ -5,28 +5,38 @@ import frc.robot.POM_lib.sensors.POMDigitalInput;
 
 public class TransferSubsystem extends PomMotorSubsystem {
     private POMSparkMax motor;
-    private POMDigitalInput noteIsIn;
-    private TransferSubsystem instance;
+    private POMDigitalInput isNoteIn;
+    private static TransferSubsystem instance;
 
     private TransferSubsystem() {
+        motor = new POMSparkMax(0);
+        isNoteIn = new POMDigitalInput(0);
+
+    }
+
+    public static TransferSubsystem getInstance() {
+        if (instance == null) {
+            instance = new TransferSubsystem();
+        }
+        return instance;
     }
 
     @Override
     public void stopMotor() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'stopMotor'");
+        motor.stop();
     }
 
     @Override
     public void setMotor(double percent) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setMotor'");
+        motor.set(percent);
     }
 
     @Override
     public void setIdleMode(boolean brake) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setIdleMode'");
+    }
+
+    public boolean isNoteInTransfer() {
+        return isNoteIn.get();
     }
 
 }
