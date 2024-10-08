@@ -20,7 +20,7 @@ public class StopNoteOnSwitchCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        transferSubsystem.setMotor(Constants.TransferConstants.MOTOR_SPEED);
+        transferSubsystem.setMotor(Constants.TransferConstants.INTAKE_SPEED);
     }
 
     @Override

@@ -31,6 +31,7 @@ public class Constants {
    }
 
    public static final class TransferConstants {
-      public static final int MOTOR_SPEED = 0;
+      public static final int INTAKE_SPEED = 0;
+      public static final int PASS_TO_SHOOT_SPEED = 0;
    }
 }
