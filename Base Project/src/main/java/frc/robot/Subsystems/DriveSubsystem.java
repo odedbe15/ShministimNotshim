@@ -11,13 +11,14 @@ import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
 import frc.robot.POM_lib.Motors.POMSparkMax;
 import static frc.robot.Constants.GeneralConstants.*;
-
+import static frc.robot.Constants.DriveConstants.*;
 import org.opencv.core.Mat;
 
 public class DriveSubsystem extends PomMotorSubsystem {
@@ -43,6 +44,14 @@ public class DriveSubsystem extends PomMotorSubsystem {
 
         driveOdometry = new DifferentialDriveOdometry(yona.getRotation2d(), leftMaster.getEncoder().getPosition(),
                 rightMaster.getEncoder().getPosition());
+
+        rightMaster.getPIDController().setP(RP);
+        rightMaster.getPIDController().setI(RI);
+        rightMaster.getPIDController().setP(RD);
+
+        leftMaster.getPIDController().setP(LP);
+        leftMaster.getPIDController().setI(LI);
+        leftMaster.getPIDController().setP(LD);
 
     }
 
@@ -107,14 +116,32 @@ public class DriveSubsystem extends PomMotorSubsystem {
 
     }
 
-    public void drive(double xSpeed, double zRotation, boolean squareInputs) {
+    public void drivVelocity(double xSpeed, double zRotation, boolean squareInputs) {
+        SimpleMotorFeedforward rightFF = new SimpleMotorFeedforward(RKS, RKV, RKA);
+        SimpleMotorFeedforward leftFF = new SimpleMotorFeedforward(LKS, LKV, LKA);
         xSpeed = MathUtil.applyDeadband(xSpeed, DEFAULT_INPUT_DEADBAND);
         zRotation = MathUtil.applyDeadband(zRotation, DEFAULT_INPUT_DEADBAND);
 
         var speeds = WheelSpeedSeter(xSpeed, zRotation, squareInputs);
 
-        leftMaster.getPIDController().setReference(speeds.left, ControlType.kVelocity);
-        rightMaster.getPIDController().setReference(speeds.right, ControlType.kVelocity);
+        leftMaster.getPIDController().setReference(speeds.left, ControlType.kVelocity, 0,
+                leftFF.calculate(speeds.left));
+        rightMaster.getPIDController().setReference(speeds.right, ControlType.kVelocity, 0,
+                rightFF.calculate(speeds.right));
+
+    }
+
+    public void driveDistance(double distance) {
+
+        SimpleMotorFeedforward rightFF = new SimpleMotorFeedforward(RKS, RKV, RKA);
+        SimpleMotorFeedforward leftFF = new SimpleMotorFeedforward(LKS, LKV, LKA);
+        distance = getAvgEncoderDistance() + distance;
+
+        // TODO ask uri about FF for driveDistance
+        leftMaster.getPIDController().setReference(distance, ControlType.kPosition, 0,
+                leftFF.calculate(leftMaster.getEncoder().getPosition()));
+        rightMaster.getPIDController().setReference(distance, ControlType.kPosition, 0,
+                rightFF.calculate(rightMaster.getEncoder().getPosition()));
 
     }
 

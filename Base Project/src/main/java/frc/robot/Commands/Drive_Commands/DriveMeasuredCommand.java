@@ -3,17 +3,16 @@ package frc.robot.Commands.Drive_Commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.DriveSubsystem;
 
-import java.util.function.Supplier;
+public class DriveMeasuredCommand extends Command {
 
-public class DriveJoysticksCommand extends Command {
+    DriveSubsystem m_driveSubsystem;
+    double m_distance;
 
-    DriveSubsystem driveSubsystem;
-    double speed;
-    double rotation;
+    public DriveMeasuredCommand(DriveSubsystem driveSubsystem, double distance) {
 
-    public DriveJoysticksCommand(Supplier<Double> speed, Supplier<Double> rotation) {
-        this.speed = speed.get();
-        this.rotation = rotation.get();
+        m_driveSubsystem = driveSubsystem;
+        m_distance = distance;
+
         addRequirements(driveSubsystem);
 
     }
@@ -26,7 +25,7 @@ public class DriveJoysticksCommand extends Command {
 
     @Override
     public void execute() {
-        driveSubsystem.arcadeDrive(speed, rotation);
+        m_driveSubsystem.driveDistance(m_distance);
     }
 
     @Override
@@ -37,8 +36,11 @@ public class DriveJoysticksCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        // TODO Auto-generated method stub
-        return super.isFinished();
+        if (m_driveSubsystem.getAvgEncoderDistance() >= m_distance) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

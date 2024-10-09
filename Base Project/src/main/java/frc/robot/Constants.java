@@ -41,6 +41,20 @@ public class Constants {
       public static final double FWD_SPEED_FACTOR = 0.2;
       public static final double ROT_SPEED_FACTOR = 0.2;
 
+      public static final double LP = 0;
+      public static final double LI = 0;
+      public static final double LD = 0;
+      public static final double LKS = 0;
+      public static final double LKV = 0;
+      public static final double LKA = 0;
+
+      public static final double RP = 0;
+      public static final double RI = 0;
+      public static final double RD = 0;
+      public static final double RKS = 0;
+      public static final double RKV = 0;
+      public static final double RKA = 0;
+
    }
 
    public class GeneralConstants {
