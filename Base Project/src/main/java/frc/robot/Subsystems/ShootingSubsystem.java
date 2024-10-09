@@ -13,25 +13,33 @@ import com.revrobotics.CANSparkBase.IdleMode;
 
 import static frc.robot.Constants.ShootingConstants.*;
 
-public class ShootingSubsystem extends PomMotorSubsystem{
+public class ShootingSubsystem extends PomMotorSubsystem {
 
     POMSparkMax leftMotor = new POMSparkMax(LEFT_MOTOR_ID, MotorType.kBrushless);
     POMSparkMax rightMotor = new POMSparkMax(RIGHT_MOTOR_ID, MotorType.kBrushless);
- 
 
-    PIDController controller = new PIDController(KP,KI,KD);
+    PIDController controller = new PIDController(KP, KI, KD);
 
+    static ShootingSubsystem instance;
 
-    public ShootingSubsystem(){
-        leftMotor.follow(rightMotor,true);
+    public ShootingSubsystem() {
+        leftMotor.follow(rightMotor, true);
 
     }
-    
+
+    public static ShootingSubsystem getInstance() {
+        if (instance == null) {
+            instance = new ShootingSubsystem();
+        }
+        return instance;
+
+    }
+
     @Override
     public void stopMotor() {
         leftMotor.set(0);
         rightMotor.set(0);
-        
+
     }
 
     @Override
@@ -45,20 +53,17 @@ public class ShootingSubsystem extends PomMotorSubsystem{
         rightMotor.setIdleMode(brake ? IdleMode.kBrake : IdleMode.kCoast);
     }
 
-
-    
-    public double getVelocity(){
-        return (leftMotor.getEncoder().getVelocity() + rightMotor.getEncoder().getVelocity())/2;
+    public double getVelocity() {
+        return (leftMotor.getEncoder().getVelocity() + rightMotor.getEncoder().getVelocity()) / 2;
     }
 
-
-    public void shoot(double velocity){
+    public void shoot(double velocity) {
         rightMotor.getPIDController().setReference(velocity, ControlType.kVelocity);
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber( "Shooting Velocity",getVelocity());
+        SmartDashboard.putNumber("Shooting Velocity", getVelocity());
     }
-    
+
 }
