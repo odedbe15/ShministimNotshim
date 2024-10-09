@@ -1,11 +1,5 @@
 package frc.robot.Subsystems;
 
-import static frc.robot.Constants.DriveConstants.LEFT_MASTER_ID;
-import static frc.robot.Constants.DriveConstants.LEFT_SLAVE_ID;
-import static frc.robot.Constants.DriveConstants.PIGEON_ID;
-import static frc.robot.Constants.DriveConstants.RIGHT_MASTER_ID;
-import static frc.robot.Constants.DriveConstants.RIGHT_SLAVE_ID;
-
 import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -33,6 +27,8 @@ public class DriveSubsystem extends PomMotorSubsystem {
     DifferentialDrive drive = new DifferentialDrive(leftMaster, rightMaster);
     DifferentialDriveOdometry driveOdometry;
 
+    static DriveSubsystem instance;
+
     public DriveSubsystem() {
         rightSlave.follow(rightMaster);
         leftSlave.follow(leftMaster);
@@ -52,6 +48,16 @@ public class DriveSubsystem extends PomMotorSubsystem {
         leftMaster.getPIDController().setP(LP);
         leftMaster.getPIDController().setI(LI);
         leftMaster.getPIDController().setP(LD);
+
+    }
+
+    public static DriveSubsystem getInstance() {
+        if (instance == null) {
+            instance = new DriveSubsystem();
+
+        }
+
+        return instance;
 
     }
 
